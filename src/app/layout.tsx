@@ -1,17 +1,13 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
-import "./globals.css";
+import { Inter } from 'next/font/google'
+import "@/globals.css";
+import "@/styles.css";
+import "@/responsive.css";
+import { ThemeProvider } from "@/components/ui/theme-provider";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+import SiteHeader from "./site-header";
+
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -21,15 +17,44 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
-}>) {
+    children: React.ReactNode;
+  }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+    <html lang="en" suppressHydrationWarning>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
       >
-        {children}
-      </body>
+        <body
+          style={{
+            overflow: "visible",
+            margin: "0",
+            minHeight: "100vh",
+            backgroundColor: "hsla(var(--black))",
+            color: "hsla(var(--white))",
+          }}
+          className={inter.className}
+        >
+          <div style={{
+            display: "flex",
+            flexDirection: "column",
+            minHeight: "100vh",
+            position: "relative",
+          }}>
+            <SiteHeader />
+            <main style={{
+              flexGrow: "1",
+              flexShrink: "1",
+              flexBasis: "0%",
+            }}>
+              {children}
+            </main>
+            {/* <SiteFooter /> */}
+          </div>
+        </body>
+      </ThemeProvider>
     </html>
   );
 }
