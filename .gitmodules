@@ -1,0 +1,3 @@
+[submodule "data/booklet_data_generator"]
+	path = data/booklet_data_generator
+	url = git@github.com:ganhaque/booklet_data_generator.git
