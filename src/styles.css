@@ -199,8 +199,7 @@ button,
 textarea {
   line-height: inherit;
   border-radius: var(--radius);
-  /* border: 1px solid hsla(var(--grey)); */
-  border: 1px solid hsla(var(--white), 0.25);
+  border: 0px solid hsla(var(--white), 0.25);
   font-size: inherit;
   font-family: inherit;
   background-color: transparent;
@@ -208,37 +207,27 @@ textarea {
   transition:
     border-color 0.5s,
     opacity 0.25s;
-  /* box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2); */
-  /* box-shadow: 0 1px 1px hsla(var(--base05)); */
-  /* outline: none; */
 }
 
 input::placeholder {
-  /* color: hsla(var(--muted_foreground)); */
   color: color-mix(in hsl, hsla(var(--black)), var(--pure-white) 50%);
 }
 textarea::placeholder {
-  /* color: hsla(var(--muted_foreground)); */
   color: color-mix(in hsl, hsla(var(--black)), var(--pure-white) 50%);
 }
-input:hover,
-button:hover {
-  /* border-color: hsla(var(--base05)); */
-  border-color: hsla(var(--primary));
-}
+/* input:hover, */
+/* button:hover { */
+/*   border-color: hsla(var(--primary)); */
+/* } */
 input:active,
 button:active {
   opacity: 0.5;
 }
 
-*:focus-visible {
-  /* border-color: hsla(var(--primary), 1); */
-  /* outline: none; */
-  border-radius: 0.375rem;
-  outline: 1px solid hsla(var(--primary));
-  /* border-color: none; */
-  /* outline: none; */
-}
+/* *:focus-visible { */
+/*   border-radius: 0.375rem; */
+/*   outline: 1px solid hsla(var(--primary)); */
+/* } */
 
 button.link:hover {
   text-decoration-line: underline;
