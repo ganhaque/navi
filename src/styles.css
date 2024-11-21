@@ -23,7 +23,12 @@
   --pure-white: white;
 
   --white: 226, 64%, 88%;
+  /* --white_darken_20: 226, 21%, 70%; */
+  --overlay_0: 231, 11%, 47%;
   --black: 240, 21%, 7%;
+  --black_lighten_10: 240, 8%, 16%;
+  --surface_0: 237, 16%, 23%;
+  --base: 240, 21%, 15%;
 
   --grey: color-mix(in hsl, hsla(var(--black)), var(--pure-white) 20%);
   --light-grey: color-mix(in hsl, hsla(var(--black)), var(--pure-white) 40%);

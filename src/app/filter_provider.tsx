@@ -3,29 +3,36 @@
 import { sql_query } from '@/utils';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 interface ProviderContextType {
-  semester: string,
-  set_semester: React.Dispatch<React.SetStateAction<string>>;
+  semester_filter: string,
+  set_semester_filter: React.Dispatch<React.SetStateAction<string>>;
+}
+
+interface Course {
+  semester_filter: string,
+  set_semester_filter: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const FilterContext = React.createContext<ProviderContextType | null>(null);
 
 export const FilterProvider: React.FC<{children: ReactNode}> = ({ children }) => {
-  const [semester, set_semester] = useState("Spring 2025");
+  const [courses, set_courses] = useState();
+  const [semester_filter, set_semester_filter] = useState("Spring 2025");
 
   useEffect(() => {
-    const get_semester = async() => {
-      const semester = await sql_query("select * from semester");
-      console.log(semester);
-    }
-
-    get_semester();
-  }, [semester]);
+    console.log("filter changed, updating course")
+    /* const get_semester = async() => { */
+    /*   const semester = await sql_query("select * from semester"); */
+    /*   console.log(semester); */
+    /* } */
+    /**/
+    /* get_semester(); */
+  }, [semester_filter]);
 
   return (
     <FilterContext.Provider
       value={{
-        semester,
-        set_semester,
+        semester_filter,
+        set_semester_filter,
       }}
     >
       {children}

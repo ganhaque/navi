@@ -30,28 +30,21 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {/* {items.map((item) => ( */}
+              {/*   <SidebarMenuItem key={item.title}> */}
+              {/*     <SidebarMenuButton asChild> */}
+              {/*       <a href={item.url}> */}
+              {/*         <item.icon /> */}
+              {/*         <span>{item.title}</span> */}
+              {/*       </a> */}
+              {/*     </SidebarMenuButton> */}
+              {/*   </SidebarMenuItem> */}
+              {/* ))} */}
 
               <SemesterPopover/>
 
               <SidebarMenuItem>
               </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
       </SidebarContent>
     </Sidebar>
   )

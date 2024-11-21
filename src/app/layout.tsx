@@ -4,12 +4,12 @@ import "@/globals.css";
 import "@/styles.css";
 import "@/responsive.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app_sidebar/mod";
+import { AppSidebar } from "@/app/app_sidebar/mod";
 /* import { ThemeProvider } from "@/components/ui/theme-provider"; */
 /* import db from "@/server/db"; */
 
 import SiteHeader from "./site-header";
-import { FilterProvider } from "@/components/filter_provider";
+import { FilterProvider } from "@/app/filter_provider";
 
 const inter = Inter({ subsets: ['latin'] })
 
