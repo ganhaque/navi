@@ -269,9 +269,9 @@ export function CourseDataTable() {
                 {/* </DropdownMenuItem> */}
                 {/* <DropdownMenuSeparator /> */}
                 {/* <DropdownMenuItem>Edit</DropdownMenuItem> */}
-                <DropdownMenuItem>
-                  <SheetTrigger asChild>
-                    <Button variant="outline">Open</Button>
+                <DropdownMenuItem className="p-0">
+                  <SheetTrigger className="h-full w-full" asChild>
+                    <Button variant="ghost" className="h-auto px-2 py-1.5 justify-start">Open</Button>
                   </SheetTrigger>
                 </DropdownMenuItem>
                 <DropdownMenuItem>Delete</DropdownMenuItem>
