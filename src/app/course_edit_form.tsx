@@ -32,13 +32,17 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react";
 import { SheetClose } from "@/components/ui/sheet"
-import { use_filter_context } from "@/app/data_provider"
+import { Course, use_filter_context } from "@/app/data_provider"
 import { SemesterSelect } from "@/components/select/semester"
 
+type CourseEditFormProps = {
+  current_course: Course;
+};
+
 // TODO: make create course form where it is the same but 
-export function CourseEditForm() {
+export function CourseEditForm({current_course} : CourseEditFormProps) {
   const [is_semester_select_open, set_is_semester_select_open] = useState(false);
-  const [new_semester, set_new_semester] = useState("");
+  const [new_semester, set_new_semester] = useState(current_course.semester_title);
 
   const {
     current_schedule,
@@ -104,39 +108,14 @@ export function CourseEditForm() {
               }}>
                 <FormLabel>Semester</FormLabel>
                 <FormControl>
-                  <Popover
-                    open={is_semester_select_open}
-                    onOpenChange={(is_semester_select_open) => {set_is_semester_select_open(is_semester_select_open)}}
-                  >
-                    <PopoverTrigger asChild>
-                      <Button variant="outline">{semester_filter}</Button>
-                    </PopoverTrigger>
-                    <PopoverContent
-                      align="start"
-                      style={{
-                        padding: "0"
-                      }}
-                    >
-                      <Command className="rounded-lg border shadow-md md:min-w-[16rem]">
-                        <CommandInput placeholder="Type a semester or search..." />
-                        <CommandList>
-                          <CommandEmpty>No results found.</CommandEmpty>
-                          {semesters.map((semester) => (
-                            <CommandItem
-                              key={semester.semester_title}
-                              onSelect={() => {
-                                /* set_semester_filter(semester.semester_title); */
-                                // TODO: set new_semester = 
-                                set_is_semester_select_open(false);
-                              }}
-                            >
-                              <span>{semester.semester_title}</span>
-                            </CommandItem>
-                          ))}
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
+                  <SemesterSelect
+                    current_select={new_semester}
+                    is_open={is_semester_select_open}
+                    set_is_open={set_is_semester_select_open}
+                    on_select={(semester_title: string) => {
+                      set_new_semester(semester_title);
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

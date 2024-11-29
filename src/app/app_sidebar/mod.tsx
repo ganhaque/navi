@@ -1,3 +1,5 @@
+"use client"
+
 import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
 
 import {
@@ -13,6 +15,8 @@ import {
 /* import { SemesterPopover } from "./semester" */
 import { DepartmentPopover } from "./department"
 import { SemesterSelect } from "@/components/select/semester"
+import { use_filter_context } from "@/app/data_provider"
+import { useState } from "react"
 
 // Menu items.
 const items = [
@@ -29,6 +33,14 @@ const items = [
 ]
 
 export function AppSidebar() {
+  const [is_semester_select_open, set_is_semester_select_open] = useState(false);
+  const {
+    semester_filter,
+    set_semester_filter,
+
+    semesters,
+  } = use_filter_context();
+
   return (
     <Sidebar>
       <SidebarContent>
@@ -44,15 +56,23 @@ export function AppSidebar() {
         {/* ))} */}
 
         <SidebarGroup>
-          <SidebarGroupLabel>Department</SidebarGroupLabel>
+          <SidebarGroupLabel>Semester</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SemesterSelect/>
+                <SemesterSelect
+                  current_select={semester_filter}
+                  is_open={is_semester_select_open}
+                  set_is_open={set_is_semester_select_open}
+                  on_select={(semester_title: string) => {
+                    set_semester_filter(semester_title);
+                  }}
+                />
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
         <DepartmentPopover/>
 
         <SidebarMenuItem>

@@ -37,13 +37,20 @@ import { use_filter_context } from "@/app/data_provider";
 import { sql_query } from "@/utils";
 import { useEffect, useState } from "react";
 
-export function SemesterSelect() {
-  const [is_open, set_is_open] = useState(false);
+type SemesterSelectProps = {
+  current_select: string;
+  is_open: boolean;
+  set_is_open: (is_open: boolean) => void;
+  on_select: (semester_title: string) => void;
+};
+
+export function SemesterSelect({ current_select, is_open, set_is_open, on_select }: SemesterSelectProps) {
+  /* const [is_open, set_is_open] = useState(false); */
   /* const [semesters, set_semesters] = useState<Semester[]>([]); */
   const {
     semesters,
-    semester_filter,
-    set_semester_filter
+    /* semester_filter, */
+    /* set_semester_filter */
   } = use_filter_context();
 
   return (
@@ -52,7 +59,7 @@ export function SemesterSelect() {
       onOpenChange={(is_open) => {set_is_open(is_open)}}
     >
       <PopoverTrigger asChild>
-        <Button variant="outline">{semester_filter}</Button>
+        <Button variant="outline">{current_select}</Button>
       </PopoverTrigger>
       <PopoverContent
         align="start"
@@ -68,7 +75,7 @@ export function SemesterSelect() {
               <CommandItem
                 key={semester.semester_title}
                 onSelect={() => {
-                  set_semester_filter(semester.semester_title);
+                  on_select(semester.semester_title);
                   set_is_open(false);
                 }}
               >

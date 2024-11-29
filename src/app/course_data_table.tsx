@@ -291,7 +291,9 @@ export function CourseDataTable() {
                 <SheetDescription>
                   Make changes to your profile here. Click save when you're done.
                 </SheetDescription>
-                <CourseEditForm/>
+                <CourseEditForm
+                  current_course={row.original}
+                />
               </SheetHeader>
               <SheetFooter>
               </SheetFooter>
