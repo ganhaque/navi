@@ -13,10 +13,10 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 /* import { SemesterPopover } from "./semester" */
-import { DepartmentPopover } from "./department"
 import { SemesterSelect } from "@/components/select/semester"
 import { use_filter_context } from "@/app/data_provider"
 import { useState } from "react"
+import { DepartmentSelect } from "@/components/select/department"
 
 // Menu items.
 const items = [
@@ -34,11 +34,15 @@ const items = [
 
 export function AppSidebar() {
   const [is_semester_select_open, set_is_semester_select_open] = useState(false);
+  const [is_department_select_open, set_is_department_select_open] = useState(false);
   const {
     semester_filter,
     set_semester_filter,
+    department_filter,
+    set_department_filter,
 
     semesters,
+    departments,
   } = use_filter_context();
 
   return (
@@ -73,8 +77,23 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <DepartmentPopover/>
-
+        <SidebarGroup>
+          <SidebarGroupLabel>Department</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <DepartmentSelect
+                  current_select={department_filter}
+                  is_open={is_department_select_open}
+                  set_is_open={set_is_department_select_open}
+                  on_select={(department_title: string) => {
+                    set_department_filter(department_title);
+                  }}
+                />
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
         <SidebarMenuItem>
         </SidebarMenuItem>
       </SidebarContent>
