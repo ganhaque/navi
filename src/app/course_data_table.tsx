@@ -46,13 +46,21 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import { Course, use_filter_context } from "@/app/filter_provider";
+import { Course, use_filter_context } from "@/app/data_provider";
 import { format_course_time } from "@/utils"
-import { SheetDemo } from "./course_edit_form"
+import { CourseEditForm } from "./course_edit_form"
 
 
 export function CourseDataTable() {
-  const { courses } = use_filter_context();
+  const {
+    current_schedule,
+    set_current_schedule,
+    courses,
+    semester_filter,
+    set_semester_filter,
+    department_filter,
+    set_department_filter,
+  } = use_filter_context();
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -223,15 +231,6 @@ export function CourseDataTable() {
       ),
     },
     {
-      accessorKey: "special_enrollment",
-      header: "Special",
-      cell: ({ row }) => (
-        <div>
-          {row.original.special_enrollment}
-        </div>
-      ),
-    },
-    {
       accessorKey: "instructor_name",
       header: "Instructor",
       cell: ({ row }) => (
@@ -244,6 +243,15 @@ export function CourseDataTable() {
               <div style={{color: "hsl(var(--muted-foreground))"}}> TBA </div>
             );
           })()}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "special_enrollment",
+      header: "Special",
+      cell: ({ row }) => (
+        <div>
+          {row.original.special_enrollment}
         </div>
       ),
     },
@@ -271,7 +279,7 @@ export function CourseDataTable() {
                 {/* <DropdownMenuItem>Edit</DropdownMenuItem> */}
                 <DropdownMenuItem className="p-0">
                   <SheetTrigger className="h-full w-full" asChild>
-                    <Button variant="ghost" className="h-auto px-2 py-1.5 justify-start">Open</Button>
+                    <Button variant="ghost" className="h-auto px-2 py-1.5 justify-start">Edit</Button>
                   </SheetTrigger>
                 </DropdownMenuItem>
                 <DropdownMenuItem>Delete</DropdownMenuItem>
@@ -283,25 +291,9 @@ export function CourseDataTable() {
                 <SheetDescription>
                   Make changes to your profile here. Click save when you're done.
                 </SheetDescription>
+                <CourseEditForm/>
               </SheetHeader>
-              <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="name" className="text-right">
-                    Name
-                  </Label>
-                  <Input id="name" className="col-span-3" />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="username" className="text-right">
-                    Username
-                  </Label>
-                  <Input id="username" className="col-span-3" />
-                </div>
-              </div>
               <SheetFooter>
-                <SheetClose asChild>
-                  <Button type="submit">Save changes</Button>
-                </SheetClose>
               </SheetFooter>
             </SheetContent>
           </Sheet>

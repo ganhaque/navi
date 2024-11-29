@@ -10,8 +10,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { SemesterPopover } from "./semester"
+/* import { SemesterPopover } from "./semester" */
 import { DepartmentPopover } from "./department"
+import { SemesterSelect } from "@/components/select/semester"
 
 // Menu items.
 const items = [
@@ -31,22 +32,31 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarContent>
-              {/* {items.map((item) => ( */}
-              {/*   <SidebarMenuItem key={item.title}> */}
-              {/*     <SidebarMenuButton asChild> */}
-              {/*       <a href={item.url}> */}
-              {/*         <item.icon /> */}
-              {/*         <span>{item.title}</span> */}
-              {/*       </a> */}
-              {/*     </SidebarMenuButton> */}
-              {/*   </SidebarMenuItem> */}
-              {/* ))} */}
+        {/* {items.map((item) => ( */}
+        {/*   <SidebarMenuItem key={item.title}> */}
+        {/*     <SidebarMenuButton asChild> */}
+        {/*       <a href={item.url}> */}
+        {/*         <item.icon /> */}
+        {/*         <span>{item.title}</span> */}
+        {/*       </a> */}
+        {/*     </SidebarMenuButton> */}
+        {/*   </SidebarMenuItem> */}
+        {/* ))} */}
 
-              <SemesterPopover/>
-              <DepartmentPopover/>
-
+        <SidebarGroup>
+          <SidebarGroupLabel>Department</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
               <SidebarMenuItem>
+                <SemesterSelect/>
               </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <DepartmentPopover/>
+
+        <SidebarMenuItem>
+        </SidebarMenuItem>
       </SidebarContent>
     </Sidebar>
   )

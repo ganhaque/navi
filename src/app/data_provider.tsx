@@ -10,6 +10,8 @@ interface ProviderContextType {
   set_semester_filter: React.Dispatch<React.SetStateAction<string>>;
   department_filter: string,
   set_department_filter: React.Dispatch<React.SetStateAction<string>>;
+
+  semesters: Semester[],
 }
 
 export interface Course {
@@ -42,6 +44,10 @@ export interface Schedule {
   semester_title: string;
 }
 
+export interface Semester {
+  semester_title: string;
+}
+
 const FilterContext = React.createContext<ProviderContextType | null>(null);
 
 export const FilterProvider: React.FC<{children: ReactNode}> = ({ children }) => {
@@ -50,7 +56,20 @@ export const FilterProvider: React.FC<{children: ReactNode}> = ({ children }) =>
 
   const [courses, set_courses] = useState<Course[]>([]);
   const [semester_filter, set_semester_filter] = useState("Spring 2025");
+  const [semesters, set_semesters] = useState<Semester[]>([]);
   const [department_filter, set_department_filter] = useState("COMPUTER SCIENCE");
+
+  useEffect(() => {
+    // TODO: sort by chronological order
+    sql_query("SELECT * FROM semester")
+      .then((semesters: Semester[]) => {
+        set_semesters(semesters);
+      })
+      .catch((error) => {
+        console.error("Error fetching semesters:", error);
+      });
+  }, []);
+
 
   useEffect(() => {
     console.log("filter changed, updating course")
@@ -99,6 +118,8 @@ WHERE 1=1
         set_semester_filter,
         department_filter,
         set_department_filter,
+
+        semesters,
       }}
     >
       {children}

@@ -33,7 +33,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { use_filter_context } from "@/app/filter_provider";
+import { use_filter_context } from "@/app/data_provider";
 import { sql_query } from "@/utils";
 import { useEffect, useState } from "react";
 

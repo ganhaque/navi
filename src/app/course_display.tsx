@@ -1,6 +1,6 @@
 "use client"
 
-import { use_filter_context } from "@/app/filter_provider";
+import { use_filter_context } from "@/app/data_provider";
 import {
   Table,
   TableBody,

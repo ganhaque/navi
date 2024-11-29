@@ -9,7 +9,7 @@ import { AppSidebar } from "@/app/app_sidebar/mod";
 /* import db from "@/server/db"; */
 
 import SiteHeader from "./site-header";
-import { FilterProvider } from "@/app/filter_provider";
+import { FilterProvider } from "@/app/data_provider";
 
 const inter = Inter({ subsets: ['latin'] })
 
