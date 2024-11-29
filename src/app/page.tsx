@@ -1,9 +1,12 @@
+import CourseDisplay from "@/app/course_display";
+import { CourseDataTable } from "./course_data_table";
 
 export default function Home() {
 
   return (
-    <div>
-      A
-    </div>
+    <>
+      {/* <CourseDisplay/> */}
+      <CourseDataTable/>
+    </>
   );
 }

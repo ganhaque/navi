@@ -1,5 +1,7 @@
 'use client';
 
+import { SidebarTrigger } from "@/components/ui/sidebar";
+
 export async function getEmailCookie() {
   const response = await fetch('/api/email-cookie', {
     method: 'GET',
@@ -59,18 +61,31 @@ function SiteHeader() {
 
   return (
     <header style={{
-      fontFamily: "SF",
       display: "flex",
       borderBottomWidth: "1px",
       /* borderColor: "hsla(var(--white), 0.2)", */
       /* backgroundColor: "hsla(var(--darkest_black))", */
       backgroundColor: "hsla(var(--black))",
       /* backgroundColor: darken("hsla(var(--black))", 0.2), */
+      height: "3rem",
       width: "100%",
       zIndex: "50",
       position: "sticky",
       top: "0",
+      alignItems: "center",
+      justifyItems: "center",
+      paddingLeft: "0.25rem",
+      paddingRight: "0.25rem",
     }}>
+      <div style={{
+        display: "flex",
+        alignItems: "center",
+        justifyItems: "center",
+        height: "2.5rem",
+        width: "2.5rem",
+      }}>
+        <SidebarTrigger />
+      </div>
       {/* <div style={{ */}
       {/*   display: "flex", */}
       {/*   alignItems: "center", */}

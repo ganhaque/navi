@@ -37,29 +37,29 @@ import { use_filter_context } from "@/app/filter_provider";
 import { sql_query } from "@/utils";
 import { useEffect, useState } from "react";
 
-interface Semester {
-  semester_title: string;
+interface department {
+  department_title: string;
 }
 
-export function SemesterPopover() {
+export function DepartmentPopover() {
   const [is_open, set_is_open] = useState(false);
-  const [semesters, set_semesters] = useState<Semester[]>([]);
-  const {semester_filter, set_semester_filter} = use_filter_context();
+  const [departments, set_departments] = useState<department[]>([]);
+  const {department_filter, set_department_filter} = use_filter_context();
 
   useEffect(() => {
-    // TODO: sort by chronological order
-    sql_query("SELECT * FROM semester")
-      .then((semesters: Semester[]) => {
-        set_semesters(semesters);
+    // TODO: sort by alphabetical order
+    sql_query("SELECT * FROM department")
+      .then((departments: department[]) => {
+        set_departments(departments);
       })
       .catch((error) => {
-        console.error("Error fetching semesters:", error);
+        console.error("Error fetching departments:", error);
       });
   }, []);
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Semester</SidebarGroupLabel>
+      <SidebarGroupLabel>Department</SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -68,7 +68,7 @@ export function SemesterPopover() {
               onOpenChange={(is_open) => {set_is_open(is_open)}}
             >
               <PopoverTrigger asChild>
-                <Button variant="outline">{semester_filter}</Button>
+                <Button variant="outline">{department_filter}</Button>
               </PopoverTrigger>
               <PopoverContent
                 align="start"
@@ -77,18 +77,18 @@ export function SemesterPopover() {
                 }}
               >
                 <Command className="rounded-lg border shadow-md md:min-w-[16rem]">
-                  <CommandInput placeholder="Type a semester or search..." />
+                  <CommandInput placeholder="Type a department or search..." />
                   <CommandList>
                     <CommandEmpty>No results found.</CommandEmpty>
-                    {semesters.map((semester) => (
+                    {departments.map((department) => (
                       <CommandItem
-                        key={semester.semester_title}
+                        key={department.department_title}
                         onSelect={() => {
-                          set_semester_filter(semester.semester_title);
+                          set_department_filter(department.department_title);
                           set_is_open(false);
                         }}
                       >
-                        <span>{semester.semester_title}</span>
+                        <span>{department.department_title}</span>
                       </CommandItem>
                     ))}
                   </CommandList>

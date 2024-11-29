@@ -11,6 +11,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { SemesterPopover } from "./semester"
+import { DepartmentPopover } from "./department"
 
 // Menu items.
 const items = [
@@ -42,6 +43,7 @@ export function AppSidebar() {
               {/* ))} */}
 
               <SemesterPopover/>
+              <DepartmentPopover/>
 
               <SidebarMenuItem>
               </SidebarMenuItem>

@@ -30,3 +30,25 @@ export async function sql_query(query: String) {
 
   return response.json();
 }
+
+export function format_course_time(begin: number, end: number): string {
+  if (begin < 0 || begin > 1439 || end < 0 || end > 1439) {
+    return 'invalid time';
+  }
+
+  const begin_hours: number = Math.floor(begin / 60);
+  const begin_minutes: number = begin % 60;
+  const end_hours: number = Math.floor(end / 60);
+  const end_minutes: number = end % 60;
+
+  const display_begin_hour: number = begin_hours % 12 || 12;
+  const display_end_hour: number = end_hours % 12 || 12;
+
+  const ampm: string = end_hours >= 12 ? 'PM' : 'AM';
+
+  const formatted_begin: string = `${display_begin_hour}:${begin_minutes.toString().padStart(2, '0')}`;
+  const formatted_end: string = `${display_end_hour}:${end_minutes.toString().padStart(2, '0')} ${ampm}`;
+
+
+  return formatted_begin + "-" + formatted_end;
+}

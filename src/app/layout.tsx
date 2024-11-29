@@ -51,13 +51,19 @@ export default function RootLayout({
             <SidebarProvider>
               <AppSidebar />
               <main style={{
+                display: "flex",
+                flexDirection: "column",
                 flexGrow: "1",
                 flexShrink: "1",
                 flexBasis: "0%",
               }}>
-                <SidebarTrigger />
                 <SiteHeader />
-                {children}
+                <div style={{
+                  display: "flex",
+                  flexGrow: "1",
+                }}>
+                  {children}
+                </div>
               </main>
             </SidebarProvider>
           </FilterProvider>

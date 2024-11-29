@@ -31,7 +31,7 @@
     --popover: var(--black);
     --popover-foreground: var(--white);
     --primary: var(--white);
-    --primary-foreground: 240 5.9% 10%;
+    --primary-foreground: var(--pure-white);
     --secondary: var(--surface_0);
     --secondary-foreground: var(--white);
     --muted: var(--surface_0);
@@ -48,5 +48,14 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+
+    --sidebar-background: var(--black);
+    --sidebar-foreground: var(--white);
+    --sidebar-primary: 0 0% 98%;
+    --sidebar-primary-foreground: 240 5.9% 10%;
+    --sidebar-accent: var(--white);
+    --sidebar-accent-foreground: var(--overlay_0);
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
