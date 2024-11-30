@@ -156,14 +156,14 @@ export function CourseDataTable() {
         <div>
           {
             row.original.course_title
-            .toLowerCase()
-            .replace(/\b\w/g, (match) => match.toUpperCase())
-            .replace(/Ii\b/g, 'II')
-            .replace(/Iii\b/g, 'III')
-            .replace(/Iv\b/g, 'IV')
-            .replace(/Vi\b/g, 'VI')
-            .replace(/Vii\b/g, 'VII')
-            .replace(/Viii\b/g, 'VIII')
+            /* .toLowerCase() */
+            /* .replace(/\b\w/g, (match) => match.toUpperCase()) */
+            /* .replace(/Ii\b/g, 'II') */
+            /* .replace(/Iii\b/g, 'III') */
+            /* .replace(/Iv\b/g, 'IV') */
+            /* .replace(/Vi\b/g, 'VI') */
+            /* .replace(/Vii\b/g, 'VII') */
+            /* .replace(/Viii\b/g, 'VIII') */
           }
         </div>
       ),

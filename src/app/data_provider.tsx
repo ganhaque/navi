@@ -69,10 +69,20 @@ export const FilterProvider: React.FC<{children: ReactNode}> = ({ children }) =>
   const [department_filter, set_department_filter] = useState("COMPUTER SCIENCE");
 
   useEffect(() => {
-    // TODO: sort by chronological order
     sql_query("SELECT * FROM semester")
       .then((semesters: Semester[]) => {
-        set_semesters(semesters);
+        const sorted_semesters = semesters.sort((a, b) => {
+          const [a_season, a_year] = a.semester_title.split(" ");
+          const [b_season, b_year] = b.semester_title.split(" ");
+
+          const season_order: Record<string, number> = { Spring: 0, Fall: 1, };
+          const a_order = parseInt(a_year) * 10 + season_order[a_season];
+          const b_order = parseInt(b_year) * 10 + season_order[b_season];
+
+          return a_order - b_order;
+        });
+
+        set_semesters(sorted_semesters);
       })
       .catch((error) => {
         console.error("Error fetching semesters:", error);
@@ -80,11 +90,12 @@ export const FilterProvider: React.FC<{children: ReactNode}> = ({ children }) =>
   }, []);
 
   useEffect(() => {
-    // TODO: sort by alphabetical
-    // TODO: query only department with abbreviation
-    sql_query("SELECT * FROM department")
+    sql_query("SELECT * FROM department WHERE abbreviation IS NOT NULL")
       .then((departments: Department[]) => {
-        set_departments(departments)
+        const sorted_departments = departments.sort((a, b) => {
+          return a.department_title.localeCompare(b.department_title);
+        });
+        set_departments(sorted_departments);
       })
       .catch((error) => {
         console.error("Error fetching departments:", error);
@@ -125,8 +136,7 @@ WHERE 1=1
     }
 
     get_courses();
-
-  }, [semester_filter]);
+  }, [semester_filter, department_filter]);
 
   return (
     <FilterContext.Provider

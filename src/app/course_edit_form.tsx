@@ -44,6 +44,8 @@ export function CourseEditForm({current_course} : CourseEditFormProps) {
   const [is_semester_select_open, set_is_semester_select_open] = useState(false);
   const [new_semester, set_new_semester] = useState(current_course.semester_title);
 
+  const [new_available, set_new_available] = useState(current_course.available);
+
   const {
     current_schedule,
     set_current_schedule,
@@ -57,18 +59,40 @@ export function CourseEditForm({current_course} : CourseEditFormProps) {
   } = use_filter_context();
 
   const formSchema = z.object({
-    username: z.string().min(2, {
-      message: "Username must be at least 2 characters.",
-    }),
-    password: z.string().min(6, {
-      message: "password must be at least 6 characters.",
-    }),
+    semester: z
+    .string(),
+    department: z
+    .string(),
+    // TODO:
+    available: z
+    .number({message: "section has to be a positive integer"})
+    .nonnegative({message: "available must be greater than or equal to 0"}),
+    // TODO:
+    enrollment: z
+    .number({message: "enrollment has to be a positive integer"})
+    .nonnegative({message: "enrollment must be greater than or equal to 0"}),
+    // TODO:
+    section: z
+    .number({message: "section has to be a positive non-zero integer"})
+    .positive({message: "section number must be greater than 0"}),
+    // TODO:
+    credit_hour: z
+    .string(),
+    title: z
+    .string(),
+    // TODO:
+    day_pattern: z
+    .string(),
+    instructor: z
+    .string(),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      semester: current_course.semester_title,
+      title: current_course.course_title,
+      instructor: current_course.instructor_name ? current_course.instructor_name : "",
     },
   })
 
@@ -79,42 +103,23 @@ export function CourseEditForm({current_course} : CourseEditFormProps) {
     console.log(values)
   }
 
+
   return (
-    /* <div className="grid gap-4 py-4"> */
     <div>
-      {/* <div className="grid grid-cols-4 items-center gap-4"> */}
-      {/*   <Label htmlFor="name" className="text-right"> */}
-      {/*     Semester */}
-      {/*   </Label> */}
-      {/*   <Input id="name" className="col-span-3" /> */}
-      {/* </div> */}
-      {/* <div className="grid grid-cols-4 items-center gap-4"> */}
-      {/*   <Label htmlFor="username" className="text-right"> */}
-      {/*     Username */}
-      {/*   </Label> */}
-      {/*   <Input id="username" className="col-span-3" /> */}
-      {/* </div> */}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(on_submit)} className="flex flex-col gap-4">
           <FormField
             control={form.control}
-            name="username"
+            name="semester"
             render={({ field }) => (
-              <FormItem style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.25rem",
-                margin: "0"
-              }}>
-                <FormLabel>Semester</FormLabel>
+              <FormItem className="flex gap-4 items-center">
+                <FormLabel>Semester:</FormLabel>
                 <FormControl>
                   <SemesterSelect
-                    current_select={new_semester}
+                    current_select={field.value}
                     is_open={is_semester_select_open}
                     set_is_open={set_is_semester_select_open}
-                    on_select={(semester_title: string) => {
-                      set_new_semester(semester_title);
-                    }}
+                    on_select={field.onChange}
                   />
                 </FormControl>
                 <FormMessage />
@@ -123,19 +128,27 @@ export function CourseEditForm({current_course} : CourseEditFormProps) {
           />
           <FormField
             control={form.control}
-            name="password"
+            name="title"
             render={({ field }) => (
-              <FormItem style={{
-                margin: "0"
-              }}>
-                <FormLabel>Password</FormLabel>
+              <FormItem>
+                <FormLabel>Title:</FormLabel>
                 <FormControl>
                   <Input
-                    style={{
-                      width: "16rem"
-                    }}
-                    type="password"
-                    placeholder="●●●●●●●●"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="instructor"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Instructor:</FormLabel>
+                <FormControl>
+                  <Input
                     {...field}
                   />
                 </FormControl>
