@@ -32,9 +32,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react";
 import { SheetClose } from "@/components/ui/sheet"
-import { Course, use_filter_context } from "@/app/data_provider"
+import { Course, TimeSlot, use_filter_context } from "@/app/data_provider"
 import { SemesterSelect } from "@/components/select/semester"
 import { DepartmentSelect } from "@/components/select/department"
+import { DayPatternSelect } from "@/components/select/day_pattern"
+import { TimeSlotSelect } from "@/components/select/time_slot"
 
 type CourseEditFormProps = {
   current_course: Course;
@@ -44,6 +46,8 @@ type CourseEditFormProps = {
 export function CourseEditForm({current_course} : CourseEditFormProps) {
   const [is_semester_select_open, set_is_semester_select_open] = useState(false);
   const [is_department_select_open, set_is_department_select_open] = useState(false);
+  const [is_day_pattern_select_open, set_is_day_pattern_select_open] = useState(false);
+  const [is_time_slot_select_open, set_is_time_slot_select_open] = useState(false);
 
   /* const { */
   /*   current_schedule, */
@@ -79,7 +83,11 @@ export function CourseEditForm({current_course} : CourseEditFormProps) {
     .string(),
     title: z
     .string(),
-    // TODO:
+    /* time_begin: z */
+    /* .number(), */
+    /* time_end: z */
+    /* .number(), */
+    time_slot: z.custom<TimeSlot>(),
     day_pattern: z
     .string(),
     instructor: z
@@ -97,6 +105,13 @@ export function CourseEditForm({current_course} : CourseEditFormProps) {
       instructor: current_course.instructor_name ? current_course.instructor_name : "",
       available: current_course.available ? current_course.available : 0,
       enrollment: current_course.enrollment ? current_course.enrollment : 0,
+      day_pattern: current_course.day_pattern ? current_course.day_pattern : "",
+      /* time_begin: current_course.time_begin ? current_course.time_begin : 0, */
+      /* time_end: current_course.time_end ? current_course.time_end : 0, */
+      /* time_slot: (current_course.time_begin && current_course.time_end) ? {current_course.time_begin, current_course.time_end} : {}, */
+      time_slot: (current_course.time_begin && current_course.time_end)
+        ? { time_begin: current_course.time_begin, time_end: current_course.time_end }
+        : {}
     },
   })
 
@@ -225,6 +240,44 @@ export function CourseEditForm({current_course} : CourseEditFormProps) {
               </FormItem>
             )}
           />
+          <div className="flex gap-4">
+            <FormField
+              control={form.control}
+              name="time_slot"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Begin:</FormLabel>
+                  <FormControl>
+                    <TimeSlotSelect
+                      current_select={field.value}
+                      is_open={is_time_slot_select_open}
+                      set_is_open={set_is_time_slot_select_open}
+                      on_select={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="day_pattern"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Days:</FormLabel>
+                  <FormControl>
+                    <DayPatternSelect
+                      current_select={field.value}
+                      is_open={is_day_pattern_select_open}
+                      set_is_open={set_is_day_pattern_select_open}
+                      on_select={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <FormField
             control={form.control}
             name="instructor"

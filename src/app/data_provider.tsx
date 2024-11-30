@@ -13,6 +13,8 @@ interface ProviderContextType {
 
   semesters: Semester[],
   departments: Department[],
+  day_patterns: DayPattern[],
+  time_slots: TimeSlot[],
 }
 
 export interface Course {
@@ -54,6 +56,15 @@ export interface Department {
   abbreviation?: string;
 }
 
+export interface DayPattern {
+  day_pattern: string;
+}
+
+export interface TimeSlot {
+  time_begin: number;
+  time_end: number;
+}
+
 const FilterContext = React.createContext<ProviderContextType | null>(null);
 
 export const FilterProvider: React.FC<{children: ReactNode}> = ({ children }) => {
@@ -64,6 +75,8 @@ export const FilterProvider: React.FC<{children: ReactNode}> = ({ children }) =>
 
   const [semesters, set_semesters] = useState<Semester[]>([]);
   const [departments, set_departments] = useState<Department[]>([]);
+  const [time_slots, set_time_slots] = useState<TimeSlot[]>([]);
+  const [day_patterns, set_day_patterns] = useState<DayPattern[]>([]);
 
   const [semester_filter, set_semester_filter] = useState("Spring 2025");
   const [department_filter, set_department_filter] = useState("COMPUTER SCIENCE");
@@ -86,6 +99,30 @@ export const FilterProvider: React.FC<{children: ReactNode}> = ({ children }) =>
       })
       .catch((error) => {
         console.error("Error fetching semesters:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    sql_query("SELECT time_begin, time_end FROM time_slot")
+      .then((time_slots: TimeSlot[]) => {
+        const sorted_time_slots = time_slots.sort((a, b) => {
+          return a.time_begin - b.time_begin;
+        });
+
+        set_time_slots(sorted_time_slots);
+      })
+      .catch((error) => {
+        console.error("Error fetching time_slots:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    sql_query("SELECT * FROM day_pattern")
+      .then((day_patterns: DayPattern[]) => {
+        set_day_patterns(day_patterns);
+      })
+      .catch((error) => {
+        console.error("Error fetching day_patterns:", error);
       });
   }, []);
 
@@ -151,6 +188,8 @@ WHERE 1=1
 
         semesters,
         departments,
+        day_patterns,
+        time_slots,
       }}
     >
       {children}
