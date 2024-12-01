@@ -32,11 +32,15 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react";
 import { SheetClose } from "@/components/ui/sheet"
-import { Course, TimeSlot, use_filter_context } from "@/app/data_provider"
+import { Course, TimeSlot, Location, use_filter_context } from "@/app/data_provider"
 import { SemesterSelect } from "@/components/select/semester"
 import { DepartmentSelect } from "@/components/select/department"
 import { DayPatternSelect } from "@/components/select/day_pattern"
 import { TimeSlotSelect } from "@/components/select/time_slot"
+import { LocationSelect } from "@/components/select/location"
+import { CourseTypeSelect } from "@/components/select/course_type"
+import { SpecialEnrollmentSelect } from "@/components/select/special_enrollment"
+import { CreditHourSelect } from "@/components/select/credit_hour"
 
 type CourseEditFormProps = {
   current_course: Course;
@@ -48,6 +52,10 @@ export function CourseEditForm({current_course} : CourseEditFormProps) {
   const [is_department_select_open, set_is_department_select_open] = useState(false);
   const [is_day_pattern_select_open, set_is_day_pattern_select_open] = useState(false);
   const [is_time_slot_select_open, set_is_time_slot_select_open] = useState(false);
+  const [is_location_select_open, set_is_location_select_open] = useState(false);
+  const [is_course_type_select_open, set_is_course_type_select_open] = useState(false);
+  const [is_special_enrollment_select_open, set_is_special_enrollment_select_open] = useState(false);
+  const [is_credit_hour_select_open, set_is_credit_hour_select_open] = useState(false);
 
   /* const { */
   /*   current_schedule, */
@@ -67,18 +75,23 @@ export function CourseEditForm({current_course} : CourseEditFormProps) {
     department: z
     .string(),
     course_number: z
+    .coerce
     .number({message: "course number has to be a positive integer"})
-    .nonnegative({message: "course number must be greater than or equal to 0"}),
+    .nonnegative({message: "course number must be greater than or equal to 0"})
+    .gte(1000, { message: "course number must be between 1000 and 9000"})
+    .lt(10000, { message: "course number must be between 1000 to 9999"}),
     section: z
+    .coerce
     .number({message: "section has to be a positive non-zero integer"})
     .positive({message: "section number must be greater than 0"}),
     available: z
+    .coerce
     .number({message: "section has to be a positive integer"})
     .nonnegative({message: "available must be greater than or equal to 0"}),
     enrollment: z
+    .coerce
     .number({message: "enrollment has to be a positive integer"})
     .nonnegative({message: "enrollment must be greater than or equal to 0"}),
-    // TODO:
     credit_hour: z
     .string(),
     title: z
@@ -88,9 +101,14 @@ export function CourseEditForm({current_course} : CourseEditFormProps) {
     /* time_end: z */
     /* .number(), */
     time_slot: z.custom<TimeSlot>(),
+    location: z.custom<Location>(),
     day_pattern: z
     .string(),
     instructor: z
+    .string(),
+    course_type: z
+    .string(),
+    special_enrollment: z
     .string(),
   });
 
@@ -109,9 +127,17 @@ export function CourseEditForm({current_course} : CourseEditFormProps) {
       /* time_begin: current_course.time_begin ? current_course.time_begin : 0, */
       /* time_end: current_course.time_end ? current_course.time_end : 0, */
       /* time_slot: (current_course.time_begin && current_course.time_end) ? {current_course.time_begin, current_course.time_end} : {}, */
-      time_slot: (current_course.time_begin && current_course.time_end)
-        ? { time_begin: current_course.time_begin, time_end: current_course.time_end }
-        : {}
+      time_slot: {
+        time_begin: current_course.time_begin || 0,
+        time_end: current_course.time_end || 0,
+      },
+      location: {
+        room_number: current_course.room_number || 0,
+        building_name: current_course.building_name || "",
+      },
+      course_type: current_course.course_type ? current_course.course_type : "",
+      special_enrollment: current_course.special_enrollment ? current_course.special_enrollment : "",
+      credit_hour: current_course.credit_hour ? current_course.credit_hour : "",
     },
   })
 
@@ -171,7 +197,9 @@ export function CourseEditForm({current_course} : CourseEditFormProps) {
                 <FormItem>
                   <FormLabel>Number:</FormLabel>
                   <FormControl>
-                    <Input className="w-16"
+                    <Input
+                      className="w-16"
+                      type="number"
                       {...field}
                     />
                   </FormControl>
@@ -186,7 +214,9 @@ export function CourseEditForm({current_course} : CourseEditFormProps) {
                 <FormItem>
                   <FormLabel>Section:</FormLabel>
                   <FormControl>
-                    <Input className="w-12"
+                    <Input
+                      className="w-12"
+                      type="number"
                       {...field}
                     />
                   </FormControl>
@@ -196,12 +226,34 @@ export function CourseEditForm({current_course} : CourseEditFormProps) {
             />
             <FormField
               control={form.control}
+              name="credit_hour"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Credit Hour:</FormLabel>
+                  <FormControl>
+                    <CreditHourSelect
+                      current_select={field.value}
+                      is_open={is_credit_hour_select_open}
+                      set_is_open={set_is_credit_hour_select_open}
+                      on_select={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="flex gap-4">
+            <FormField
+              control={form.control}
               name="available"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Available:</FormLabel>
                   <FormControl>
-                    <Input className="w-14"
+                    <Input
+                      className="w-14"
+                      type="number"
                       {...field}
                     />
                   </FormControl>
@@ -216,7 +268,9 @@ export function CourseEditForm({current_course} : CourseEditFormProps) {
                 <FormItem>
                   <FormLabel>Enrollment:</FormLabel>
                   <FormControl>
-                    <Input className="w-14"
+                    <Input
+                      className="w-14"
+                      type="number"
                       {...field}
                     />
                   </FormControl>
@@ -233,6 +287,7 @@ export function CourseEditForm({current_course} : CourseEditFormProps) {
                 <FormLabel>Title:</FormLabel>
                 <FormControl>
                   <Input
+                    type="number"
                     {...field}
                   />
                 </FormControl>
@@ -280,12 +335,31 @@ export function CourseEditForm({current_course} : CourseEditFormProps) {
           </div>
           <FormField
             control={form.control}
+            name="location"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Location:</FormLabel>
+                <FormControl>
+                  <LocationSelect
+                    current_select={field.value}
+                    is_open={is_location_select_open}
+                    set_is_open={set_is_location_select_open}
+                    on_select={field.onChange}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="instructor"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Instructor:</FormLabel>
                 <FormControl>
-                  <Input className="w-48"
+                  <Input
+                    className="w-48"
                     {...field}
                   />
                 </FormControl>
@@ -293,7 +367,45 @@ export function CourseEditForm({current_course} : CourseEditFormProps) {
               </FormItem>
             )}
           />
-          <Button type="submit" className="ml-auto">Register</Button>
+          <div className="flex gap-4">
+            <FormField
+              control={form.control}
+              name="course_type"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Type:</FormLabel>
+                  <FormControl>
+                    <CourseTypeSelect
+                      current_select={field.value}
+                      is_open={is_course_type_select_open}
+                      set_is_open={set_is_course_type_select_open}
+                      on_select={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="special_enrollment"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Special:</FormLabel>
+                  <FormControl>
+                    <SpecialEnrollmentSelect
+                      current_select={field.value}
+                      is_open={is_special_enrollment_select_open}
+                      set_is_open={set_is_special_enrollment_select_open}
+                      on_select={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <Button type="submit" className="ml-auto">Save Changes</Button>
         </form>
       </Form>
     </div>

@@ -15,6 +15,10 @@ interface ProviderContextType {
   departments: Department[],
   day_patterns: DayPattern[],
   time_slots: TimeSlot[],
+  locations: Location[],
+  special_enrollments: SpecialEnrollment[],
+  course_types: CourseType[],
+  credit_hours: CreditHour[],
 }
 
 export interface Course {
@@ -24,7 +28,7 @@ export interface Course {
   enrollment?: number | null;
   course_number: number;
   section: number;
-  room_number?: string | null;
+  room_number?: number | null;
   building_name?: string | null;
   time_begin?: number | null;
   time_end?: number | null;
@@ -65,6 +69,21 @@ export interface TimeSlot {
   time_end: number;
 }
 
+export interface Location {
+  room_number: number;
+  building_name: string;
+}
+
+export interface SpecialEnrollment {
+  special_enrollment: string;
+}
+export interface CourseType {
+  course_type: string;
+}
+export interface CreditHour {
+  credit_hour: string;
+}
+
 const FilterContext = React.createContext<ProviderContextType | null>(null);
 
 export const FilterProvider: React.FC<{children: ReactNode}> = ({ children }) => {
@@ -77,6 +96,10 @@ export const FilterProvider: React.FC<{children: ReactNode}> = ({ children }) =>
   const [departments, set_departments] = useState<Department[]>([]);
   const [time_slots, set_time_slots] = useState<TimeSlot[]>([]);
   const [day_patterns, set_day_patterns] = useState<DayPattern[]>([]);
+  const [locations, set_locations] = useState<Location[]>([]);
+  const [special_enrollments, set_special_enrollments] = useState<SpecialEnrollment[]>([]);
+  const [course_types, set_course_types] = useState<CourseType[]>([]);
+  const [credit_hours, set_credit_hours] = useState<CreditHour[]>([]);
 
   const [semester_filter, set_semester_filter] = useState("Spring 2025");
   const [department_filter, set_department_filter] = useState("COMPUTER SCIENCE");
@@ -103,9 +126,77 @@ export const FilterProvider: React.FC<{children: ReactNode}> = ({ children }) =>
   }, []);
 
   useEffect(() => {
-    sql_query("SELECT time_begin, time_end FROM time_slot")
+    sql_query("SELECT * FROM credit_hour")
+      .then((credit_hours: CreditHour[]) => {
+        const sorted_credit_hour = credit_hours.sort((a, b) => {
+          return a.credit_hour.localeCompare(b.credit_hour);
+        });
+
+        console.log(sorted_credit_hour)
+
+        set_credit_hours(sorted_credit_hour);
+      })
+      .catch((error) => {
+        console.error("Error fetching course_types:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    sql_query("SELECT * FROM course_type")
+      .then((course_types: CourseType[]) => {
+        const sorted_course_types = course_types.sort((a, b) => {
+          return a.course_type.localeCompare(b.course_type);
+        });
+
+        console.log(sorted_course_types)
+
+        set_course_types(sorted_course_types);
+      })
+      .catch((error) => {
+        console.error("Error fetching course_types:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    sql_query("SELECT * FROM special_enrollment")
+      .then((special_enrollments: SpecialEnrollment[]) => {
+        const sorted_special_enrollments = special_enrollments.sort((a, b) => {
+          return a.special_enrollment.localeCompare(b.special_enrollment);
+        });
+
+        console.log(sorted_special_enrollments)
+
+        set_special_enrollments(sorted_special_enrollments);
+      })
+      .catch((error) => {
+        console.error("Error fetching special_enrollments:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    sql_query("SELECT * FROM location")
+      .then((locations: Location[]) => {
+        const sorted_locations = locations.sort((a, b) => {
+          if (a.building_name === b.building_name) {
+            return a.room_number - b.room_number;
+          }
+          return a.building_name.localeCompare(b.building_name);
+        });
+
+        set_locations(sorted_locations);
+      })
+      .catch((error) => {
+        console.error("Error fetching time_slots:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    sql_query("SELECT * FROM time_slot")
       .then((time_slots: TimeSlot[]) => {
         const sorted_time_slots = time_slots.sort((a, b) => {
+          if (a.time_begin === b.time_begin) {
+            return a.time_end - b.time_end;
+          }
           return a.time_begin - b.time_begin;
         });
 
@@ -168,7 +259,7 @@ WHERE 1=1
         params.push(department_filter);
       }
       const courses = await sql_query(query);
-      console.log(courses);
+      /* console.log(courses); */
       set_courses(courses);
     }
 
@@ -190,6 +281,10 @@ WHERE 1=1
         departments,
         day_patterns,
         time_slots,
+        locations,
+        special_enrollments,
+        course_types,
+        credit_hours,
       }}
     >
       {children}
