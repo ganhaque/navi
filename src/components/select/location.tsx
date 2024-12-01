@@ -38,10 +38,10 @@ import { format_course_time, sql_query } from "@/utils";
 import { useEffect, useState } from "react";
 
 type LocationSelectProps = {
-  current_select: Location;
+  current_select: Location | null;
   is_open: boolean;
   set_is_open: (is_open: boolean) => void;
-  on_select: (location: Location) => void;
+  on_select: (location: Location | null) => void;
 };
 
 export function LocationSelect({
@@ -60,7 +60,9 @@ export function LocationSelect({
       onOpenChange={(is_open) => {set_is_open(is_open)}}
     >
       <PopoverTrigger asChild>
-        <Button variant="outline">{current_select.room_number} {current_select.building_name}</Button>
+        <Button variant="outline">
+          {current_select ? (current_select.room_number + " " + current_select.building_name) : ""}
+        </Button>
       </PopoverTrigger>
       <PopoverContent
         align="start"
@@ -71,6 +73,14 @@ export function LocationSelect({
         <Command className="rounded-lg border shadow-md md:min-w-[16rem]">
           <CommandInput placeholder="Type a location or search..." />
           <CommandList>
+            <CommandItem
+              onSelect={() => {
+                on_select(null);
+                set_is_open(false);
+              }}
+            >
+              <span className="opacity-0">NULL</span>
+            </CommandItem>
             <CommandEmpty>No results found.</CommandEmpty>
             {locations.map((location) => {
               return (

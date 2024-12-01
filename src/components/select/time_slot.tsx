@@ -38,10 +38,10 @@ import { format_course_time, sql_query } from "@/utils";
 import { useEffect, useState } from "react";
 
 type TimeSlotSelectProps = {
-  current_select: TimeSlot;
+  current_select: TimeSlot | null;
   is_open: boolean;
   set_is_open: (is_open: boolean) => void;
-  on_select: (time_slot: TimeSlot) => void;
+  on_select: (time_slot: TimeSlot | null) => void;
 };
 
 export function TimeSlotSelect({
@@ -61,7 +61,9 @@ export function TimeSlotSelect({
       onOpenChange={(is_open) => {set_is_open(is_open)}}
     >
       <PopoverTrigger asChild>
-        <Button variant="outline">{format_course_time(current_select.time_begin, current_select.time_end)}</Button>
+        <Button variant="outline">
+          {current_select ? format_course_time(current_select.time_begin, current_select.time_end) : ""}
+        </Button>
       </PopoverTrigger>
       <PopoverContent
         align="start"
@@ -72,7 +74,23 @@ export function TimeSlotSelect({
         <Command className="rounded-lg border shadow-md md:min-w-[16rem]">
           <CommandInput placeholder="Type a time_slot or search..." />
           <CommandList>
+            <CommandItem
+              onSelect={() => {
+                on_select(null);
+                set_is_open(false);
+              }}
+            >
+              <span className="opacity-0">NULL</span>
+            </CommandItem>
             <CommandEmpty>No results found.</CommandEmpty>
+            <CommandItem
+              onSelect={() => {
+                on_select(null);
+                set_is_open(false);
+              }}
+            >
+              <span className="opacity-0">NULL</span>
+            </CommandItem>
             {time_slots.map((time_slot) => {
               return (
                 <CommandItem

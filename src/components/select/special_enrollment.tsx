@@ -38,10 +38,10 @@ import { sql_query } from "@/utils";
 import { useEffect, useState } from "react";
 
 type SpecialEnrollmentSelectProps = {
-  current_select: string;
+  current_select: string | null;
   is_open: boolean;
   set_is_open: (is_open: boolean) => void;
-  on_select: (special_enrollment_title: string) => void;
+  on_select: (special_enrollment_title: string | null) => void;
 };
 
 export function SpecialEnrollmentSelect({ current_select, is_open, set_is_open, on_select }: SpecialEnrollmentSelectProps) {
@@ -67,6 +67,14 @@ export function SpecialEnrollmentSelect({ current_select, is_open, set_is_open, 
           <CommandInput placeholder="Type a special_enrollment or search..." />
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
+            <CommandItem
+              onSelect={() => {
+                on_select(null);
+                set_is_open(false);
+              }}
+            >
+              <span className="opacity-0">NULL</span>
+            </CommandItem>
             {special_enrollments.map((special_enrollment) => (
               <CommandItem
                 key={special_enrollment.special_enrollment}

@@ -38,10 +38,10 @@ import { sql_query } from "@/utils";
 import { useEffect, useState } from "react";
 
 type DayPatternSelectProps = {
-  current_select: string;
+  current_select: string | null;
   is_open: boolean;
   set_is_open: (is_open: boolean) => void;
-  on_select: (day_pattern_title: string) => void;
+  on_select: (day_pattern_title: string | null) => void;
 };
 
 export function DayPatternSelect({ current_select, is_open, set_is_open, on_select }: DayPatternSelectProps) {
@@ -66,6 +66,14 @@ export function DayPatternSelect({ current_select, is_open, set_is_open, on_sele
         <Command className="rounded-lg border shadow-md md:min-w-[16rem]">
           <CommandInput placeholder="Type a day_pattern or search..." />
           <CommandList>
+            <CommandItem
+              onSelect={() => {
+                on_select(null);
+                set_is_open(false);
+              }}
+            >
+              <span className="opacity-0">NULL</span>
+            </CommandItem>
             <CommandEmpty>No results found.</CommandEmpty>
             {day_patterns.map((day_pattern) => (
               <CommandItem

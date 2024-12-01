@@ -19,6 +19,9 @@ interface ProviderContextType {
   special_enrollments: SpecialEnrollment[],
   course_types: CourseType[],
   credit_hours: CreditHour[],
+
+  update: boolean,
+  set_update: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface Course {
@@ -104,6 +107,10 @@ export const FilterProvider: React.FC<{children: ReactNode}> = ({ children }) =>
 
   const [semester_filter, set_semester_filter] = useState("Spring 2025");
   const [department_filter, set_department_filter] = useState("COMPUTER SCIENCE");
+
+  // hacky solution to prompt courses update
+  // do set_update(!update) to update courses
+  const [update, set_update] = useState(false);
 
   useEffect(() => {
     sql_query("SELECT * FROM semester")
@@ -259,7 +266,7 @@ WHERE 1=1
     }
 
     get_courses();
-  }, [semester_filter, department_filter]);
+  }, [update, semester_filter, department_filter]);
 
   return (
     <FilterContext.Provider
@@ -280,6 +287,9 @@ WHERE 1=1
         special_enrollments,
         course_types,
         credit_hours,
+
+        update,
+        set_update,
       }}
     >
       {children}
