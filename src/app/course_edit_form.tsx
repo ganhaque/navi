@@ -287,7 +287,6 @@ export function CourseEditForm({current_course} : CourseEditFormProps) {
                 <FormLabel>Title:</FormLabel>
                 <FormControl>
                   <Input
-                    type="number"
                     {...field}
                   />
                 </FormControl>
