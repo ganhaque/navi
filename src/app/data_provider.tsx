@@ -22,6 +22,7 @@ interface ProviderContextType {
 }
 
 export interface Course {
+  course_id: number;
   semester_title: string;
   department_title: string;
   available?: number | null;
@@ -132,8 +133,6 @@ export const FilterProvider: React.FC<{children: ReactNode}> = ({ children }) =>
           return a.credit_hour.localeCompare(b.credit_hour);
         });
 
-        console.log(sorted_credit_hour)
-
         set_credit_hours(sorted_credit_hour);
       })
       .catch((error) => {
@@ -148,8 +147,6 @@ export const FilterProvider: React.FC<{children: ReactNode}> = ({ children }) =>
           return a.course_type.localeCompare(b.course_type);
         });
 
-        console.log(sorted_course_types)
-
         set_course_types(sorted_course_types);
       })
       .catch((error) => {
@@ -163,8 +160,6 @@ export const FilterProvider: React.FC<{children: ReactNode}> = ({ children }) =>
         const sorted_special_enrollments = special_enrollments.sort((a, b) => {
           return a.special_enrollment.localeCompare(b.special_enrollment);
         });
-
-        console.log(sorted_special_enrollments)
 
         set_special_enrollments(sorted_special_enrollments);
       })

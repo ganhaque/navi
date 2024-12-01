@@ -16,7 +16,7 @@ export function darken(color: string, percentage: number) {
 }
 
 export async function sql_query(query: String) {
-  const response = await fetch('/api/database', {
+  const response = await fetch('/api/database/query', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -29,6 +29,23 @@ export async function sql_query(query: String) {
   }
 
   return response.json();
+}
+
+export async function sql_update(query: String) {
+  const response = await fetch('/api/database/update', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(query),
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  // console.log(await response.json())
+  // return response.json();
 }
 
 export function format_course_time(begin: number, end: number): string {

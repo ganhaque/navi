@@ -41,6 +41,7 @@ import { LocationSelect } from "@/components/select/location"
 import { CourseTypeSelect } from "@/components/select/course_type"
 import { SpecialEnrollmentSelect } from "@/components/select/special_enrollment"
 import { CreditHourSelect } from "@/components/select/credit_hour"
+import { sql_query, sql_update } from "@/utils"
 
 type CourseEditFormProps = {
   current_course: Course;
@@ -143,9 +144,60 @@ export function CourseEditForm({current_course} : CourseEditFormProps) {
 
   // 2. Define a submit handler.
   function on_submit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+    const updates: Record<string, any> = {};
+    const course_id = current_course.course_id;
+
+    const isEqual = (a: any, b: any) =>
+      a === b ||
+        (a == null && (b === "" || b === 0)) || 
+        (b == null && (a === "" || a === 0));
+
+    // Compare each field to see if it has changed
+    if (!isEqual(values.semester, current_course.semester_title)) updates.semester_title = values.semester;
+    if (!isEqual(values.department, current_course.department_title)) updates.department_title = values.department;
+    if (!isEqual(values.course_number, current_course.course_number)) updates.course_number = values.course_number;
+    if (!isEqual(values.section, current_course.section)) updates.section = values.section;
+    if (!isEqual(values.title, current_course.course_title)) updates.course_title = values.title;
+    if (!isEqual(values.instructor, current_course.instructor_name)) updates.instructor_name = values.instructor;
+    if (!isEqual(values.available, current_course.available)) updates.available = values.available;
+    if (!isEqual(values.enrollment, current_course.enrollment)) updates.enrollment = values.enrollment;
+    if (!isEqual(values.day_pattern, current_course.day_pattern)) updates.day_pattern = values.day_pattern;
+
+    if (
+      !isEqual(values.time_slot.time_begin, current_course.time_begin) ||
+        !isEqual(values.time_slot.time_end, current_course.time_end)
+    ) {
+      updates.time_begin = values.time_slot.time_begin;
+      updates.time_end = values.time_slot.time_end;
+    }
+
+    if (
+      !isEqual(values.location.room_number, current_course.room_number) ||
+        !isEqual(values.location.building_name, current_course.building_name)
+    ) {
+      updates.room_number = values.location.room_number;
+      updates.building_name = values.location.building_name;
+    }
+
+    if (!isEqual(values.course_type, current_course.course_type)) updates.course_type = values.course_type;
+    if (!isEqual(values.special_enrollment, current_course.special_enrollment)) updates.special_enrollment = values.special_enrollment;
+    if (!isEqual(values.credit_hour, current_course.credit_hour)) updates.credit_hour = values.credit_hour;
+
+    // If no fields were updated, log a message and return
+    if (Object.keys(updates).length === 0) {
+      console.log("No changes detected.");
+      return;
+    }
+
+    // Generate the SQL command
+    const set_clauses = Object.entries(updates)
+    .map(([key, value]) => `${key} = ${typeof value === "string" ? `'${value}'` : value}`)
+    .join(", ");
+    const sql_statement = `UPDATE course SET ${set_clauses} WHERE course_id = ${course_id};`;
+
+    /* console.log(sql_update); */
+    /* sql_query(sql_update); */
+    sql_update(sql_statement);
   }
 
 
