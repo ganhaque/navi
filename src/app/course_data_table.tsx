@@ -47,19 +47,15 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { Course, use_filter_context } from "@/app/data_provider";
-import { format_course_time } from "@/utils"
+import { format_course_time, sql_delete } from "@/utils"
 import { CourseEditForm } from "./course_edit_form"
 
 
 export function CourseDataTable() {
   const {
-    current_schedule,
-    set_current_schedule,
     courses,
-    semester_filter,
-    set_semester_filter,
-    department_filter,
-    set_department_filter,
+    update,
+    set_update,
   } = use_filter_context();
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -71,26 +67,81 @@ export function CourseDataTable() {
 
   const columns: ColumnDef<Course>[] = [
     {
-      id: "select",
-      cell: ({ row }) => (
-        <div
-          style={{
-            backgroundColor: (row.getIsSelected()) ? "hsl(var(--white))" : "hsl(var(--black))",
-            borderColor: (row.getIsSelected()) ? "hsl(var(--muted-foreground))" : "hsl(var(--muted-foreground))",
-            width: "1.5rem",
-            height: "1.5rem",
-            borderWidth: "1px",
-            borderRadius: "0.25rem",
-          }}
-          onClick={() => {
-            row.toggleSelected(!row.getIsSelected())
-          }}
-        >
-        </div>
-      ),
-      enableSorting: false,
+      id: "actions",
       enableHiding: false,
+      cell: ({ row }) => {
+        return (
+          <Sheet>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <MoreHorizontal />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" side="right">
+                {/* <DropdownMenuLabel>Actions</DropdownMenuLabel> */}
+                {/* <DropdownMenuItem */}
+                {/*   onClick={() => navigator.clipboard.writeText(payment.id)} */}
+                {/* > */}
+                {/*   Copy payment ID */}
+                {/* </DropdownMenuItem> */}
+                {/* <DropdownMenuSeparator /> */}
+                {/* <DropdownMenuItem>Edit</DropdownMenuItem> */}
+                <DropdownMenuItem className="p-0">
+                  <SheetTrigger className="h-full w-full" asChild>
+                    <Button variant="ghost" className="h-auto px-2 py-1.5 justify-start">Edit</Button>
+                  </SheetTrigger>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    const sql_statement = `DELETE FROM course WHERE course_id = ${row.original.course_id};`;
+                    sql_delete(sql_statement);
+                    set_update(!update);
+                  }}
+                >
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <SheetContent>
+              <SheetHeader>
+                <SheetTitle>Edit profile</SheetTitle>
+                <SheetDescription>
+                  Make changes to your profile here. Click save when you're done.
+                </SheetDescription>
+                <CourseEditForm
+                  current_course={row.original}
+                />
+              </SheetHeader>
+              <SheetFooter>
+              </SheetFooter>
+            </SheetContent>
+          </Sheet>
+        )
+      },
     },
+    /* { */
+    /*   id: "select", */
+    /*   cell: ({ row }) => ( */
+    /*     <div */
+    /*       style={{ */
+    /*         backgroundColor: (row.getIsSelected()) ? "hsl(var(--white))" : "hsl(var(--black))", */
+    /*         borderColor: (row.getIsSelected()) ? "hsl(var(--muted-foreground))" : "hsl(var(--muted-foreground))", */
+    /*         width: "1.5rem", */
+    /*         height: "1.5rem", */
+    /*         borderWidth: "1px", */
+    /*         borderRadius: "0.25rem", */
+    /*       }} */
+    /*       onClick={() => { */
+    /*         row.toggleSelected(!row.getIsSelected()) */
+    /*       }} */
+    /*     > */
+    /*     </div> */
+    /*   ), */
+    /*   enableSorting: false, */
+    /*   enableHiding: false, */
+    /* }, */
     {
       accessorKey: "available",
       header: "Available",
@@ -247,6 +298,15 @@ export function CourseDataTable() {
       ),
     },
     {
+      accessorKey: "course_type",
+      header: "Type",
+      cell: ({ row }) => (
+        <div>
+          {row.original.course_type}
+        </div>
+      ),
+    },
+    {
       accessorKey: "special_enrollment",
       header: "Special",
       cell: ({ row }) => (
@@ -254,53 +314,6 @@ export function CourseDataTable() {
           {row.original.special_enrollment}
         </div>
       ),
-    },
-    {
-      id: "actions",
-      enableHiding: false,
-      cell: ({ row }) => {
-        return (
-          <Sheet>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
-                  <span className="sr-only">Open menu</span>
-                  <MoreHorizontal />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                {/* <DropdownMenuLabel>Actions</DropdownMenuLabel> */}
-                {/* <DropdownMenuItem */}
-                {/*   onClick={() => navigator.clipboard.writeText(payment.id)} */}
-                {/* > */}
-                {/*   Copy payment ID */}
-                {/* </DropdownMenuItem> */}
-                {/* <DropdownMenuSeparator /> */}
-                {/* <DropdownMenuItem>Edit</DropdownMenuItem> */}
-                <DropdownMenuItem className="p-0">
-                  <SheetTrigger className="h-full w-full" asChild>
-                    <Button variant="ghost" className="h-auto px-2 py-1.5 justify-start">Edit</Button>
-                  </SheetTrigger>
-                </DropdownMenuItem>
-                <DropdownMenuItem>Delete</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <SheetContent>
-              <SheetHeader>
-                <SheetTitle>Edit profile</SheetTitle>
-                <SheetDescription>
-                  Make changes to your profile here. Click save when you're done.
-                </SheetDescription>
-                <CourseEditForm
-                  current_course={row.original}
-                />
-              </SheetHeader>
-              <SheetFooter>
-              </SheetFooter>
-            </SheetContent>
-          </Sheet>
-        )
-      },
     },
   ];
 

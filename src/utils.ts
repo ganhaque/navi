@@ -48,6 +48,24 @@ export async function sql_update(query: String) {
   // return response.json();
 }
 
+// TODO: different functionality for sql_delete & update
+export async function sql_delete(query: String) {
+  const response = await fetch('/api/database/delete', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(query),
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  // console.log(await response.json())
+  // return response.json();
+}
+
 export function format_course_time(begin: number, end: number): string {
   if (begin < 0 || begin > 1439 || end < 0 || end > 1439) {
     return 'invalid time';
