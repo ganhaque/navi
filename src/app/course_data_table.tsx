@@ -360,6 +360,25 @@ export function CourseDataTable() {
         {/*   } */}
         {/*   className="max-w-sm" */}
         {/* /> */}
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline">Add Course</Button>
+          </SheetTrigger>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Add course</SheetTitle>
+              <SheetDescription>
+                Add new course here. Click submit when you're done.
+              </SheetDescription>
+              {/* TODO:  */}
+              {/* <CourseEditForm */}
+              {/*   current_course={row.original} */}
+              {/* /> */}
+            </SheetHeader>
+            <SheetFooter>
+            </SheetFooter>
+          </SheetContent>
+        </Sheet>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">

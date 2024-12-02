@@ -48,6 +48,8 @@ type CourseEditFormProps = {
 };
 
 // TODO: make create course form where it is the same but 
+
+// TODO: when editing enum dropdown, add option to add new to table
 export function CourseEditForm({current_course} : CourseEditFormProps) {
   const [is_semester_select_open, set_is_semester_select_open] = useState(false);
   const [is_department_select_open, set_is_department_select_open] = useState(false);
@@ -207,7 +209,6 @@ export function CourseEditForm({current_course} : CourseEditFormProps) {
     sql_update(sql_statement);
     set_update(!update);
   }
-
 
   return (
     <div>
