@@ -42,6 +42,7 @@ import { CourseTypeSelect } from "@/components/select/course_type"
 import { SpecialEnrollmentSelect } from "@/components/select/special_enrollment"
 import { CreditHourSelect } from "@/components/select/credit_hour"
 import { sql_query, sql_update } from "@/utils"
+import { InstructorSelect } from "@/components/select/instructor"
 
 type CourseEditFormProps = {
   current_course: Course;
@@ -59,6 +60,7 @@ export function CourseEditForm({current_course} : CourseEditFormProps) {
   const [is_course_type_select_open, set_is_course_type_select_open] = useState(false);
   const [is_special_enrollment_select_open, set_is_special_enrollment_select_open] = useState(false);
   const [is_credit_hour_select_open, set_is_credit_hour_select_open] = useState(false);
+  const [is_instructor_select_open, set_is_instructor_select_open] = useState(false);
 
   const {
     update,
@@ -106,8 +108,8 @@ export function CourseEditForm({current_course} : CourseEditFormProps) {
     .string()
     .nullable(),
     instructor: z
-    .string(),
-    /* .nullable(), */
+    .string()
+    .nullable(),
     course_type: z
     .string()
     .nullable(),
@@ -124,7 +126,7 @@ export function CourseEditForm({current_course} : CourseEditFormProps) {
       course_number: current_course.course_number,
       section: current_course.section,
       title: current_course.course_title,
-      instructor: current_course.instructor_name ? current_course.instructor_name : "",
+      instructor: current_course.instructor_name,
       available: current_course.available ? current_course.available : 0,
       enrollment: current_course.enrollment ? current_course.enrollment : 0,
       day_pattern: current_course.day_pattern ? current_course.day_pattern : "",
@@ -418,9 +420,11 @@ export function CourseEditForm({current_course} : CourseEditFormProps) {
               <FormItem>
                 <FormLabel>Instructor:</FormLabel>
                 <FormControl>
-                  <Input
-                    className="w-48"
-                    {...field}
+                  <InstructorSelect
+                    current_select={field.value}
+                    is_open={is_instructor_select_open}
+                    set_is_open={set_is_instructor_select_open}
+                    on_select={field.onChange}
                   />
                 </FormControl>
                 <FormMessage />

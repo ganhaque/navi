@@ -19,6 +19,7 @@ interface ProviderContextType {
   special_enrollments: SpecialEnrollment[],
   course_types: CourseType[],
   credit_hours: CreditHour[],
+  instructors: Instructor[],
 
   update: boolean,
   set_update: React.Dispatch<React.SetStateAction<boolean>>;
@@ -87,6 +88,9 @@ export interface CourseType {
 export interface CreditHour {
   credit_hour: string;
 }
+export interface Instructor {
+  instructor_name: string;
+}
 
 const FilterContext = React.createContext<ProviderContextType | null>(null);
 
@@ -104,9 +108,10 @@ export const FilterProvider: React.FC<{children: ReactNode}> = ({ children }) =>
   const [special_enrollments, set_special_enrollments] = useState<SpecialEnrollment[]>([]);
   const [course_types, set_course_types] = useState<CourseType[]>([]);
   const [credit_hours, set_credit_hours] = useState<CreditHour[]>([]);
+  const [instructors, set_instructors] = useState<Instructor[]>([]);
 
   const [semester_filter, set_semester_filter] = useState("Spring 2025");
-  const [department_filter, set_department_filter] = useState("COMPUTER SCIENCE");
+  const [department_filter, set_department_filter] = useState("Computer Science");
 
   // hacky solution to prompt courses update
   // do set_update(!update) to update courses
@@ -131,7 +136,7 @@ export const FilterProvider: React.FC<{children: ReactNode}> = ({ children }) =>
       .catch((error) => {
         console.error("Error fetching semesters:", error);
       });
-  }, []);
+  }, [update]);
 
   useEffect(() => {
     sql_query("SELECT * FROM credit_hour")
@@ -145,7 +150,21 @@ export const FilterProvider: React.FC<{children: ReactNode}> = ({ children }) =>
       .catch((error) => {
         console.error("Error fetching course_types:", error);
       });
-  }, []);
+  }, [update]);
+
+  useEffect(() => {
+    sql_query("SELECT * FROM instructor")
+      .then((instructors: Instructor[]) => {
+        const sorted_instructors = instructors.sort((a, b) => {
+          return a.instructor_name.localeCompare(b.instructor_name);
+        });
+
+        set_instructors(sorted_instructors);
+      })
+      .catch((error) => {
+        console.error("Error fetching course_types:", error);
+      });
+  }, [update]);
 
   useEffect(() => {
     sql_query("SELECT * FROM course_type")
@@ -159,7 +178,7 @@ export const FilterProvider: React.FC<{children: ReactNode}> = ({ children }) =>
       .catch((error) => {
         console.error("Error fetching course_types:", error);
       });
-  }, []);
+  }, [update]);
 
   useEffect(() => {
     sql_query("SELECT * FROM special_enrollment")
@@ -173,7 +192,7 @@ export const FilterProvider: React.FC<{children: ReactNode}> = ({ children }) =>
       .catch((error) => {
         console.error("Error fetching special_enrollments:", error);
       });
-  }, []);
+  }, [update]);
 
   useEffect(() => {
     sql_query("SELECT * FROM location")
@@ -190,7 +209,7 @@ export const FilterProvider: React.FC<{children: ReactNode}> = ({ children }) =>
       .catch((error) => {
         console.error("Error fetching time_slots:", error);
       });
-  }, []);
+  }, [update]);
 
   useEffect(() => {
     sql_query("SELECT * FROM time_slot")
@@ -207,7 +226,7 @@ export const FilterProvider: React.FC<{children: ReactNode}> = ({ children }) =>
       .catch((error) => {
         console.error("Error fetching time_slots:", error);
       });
-  }, []);
+  }, [update]);
 
   useEffect(() => {
     sql_query("SELECT * FROM day_pattern")
@@ -217,7 +236,7 @@ export const FilterProvider: React.FC<{children: ReactNode}> = ({ children }) =>
       .catch((error) => {
         console.error("Error fetching day_patterns:", error);
       });
-  }, []);
+  }, [update]);
 
   useEffect(() => {
     sql_query("SELECT * FROM department WHERE abbreviation IS NOT NULL")
@@ -230,7 +249,7 @@ export const FilterProvider: React.FC<{children: ReactNode}> = ({ children }) =>
       .catch((error) => {
         console.error("Error fetching departments:", error);
       });
-  }, []);
+  }, [update]);
 
   useEffect(() => {
     console.log("filter changed, updating course")
@@ -287,6 +306,7 @@ WHERE 1=1
         special_enrollments,
         course_types,
         credit_hours,
+        instructors,
 
         update,
         set_update,

@@ -74,14 +74,6 @@ export function TimeSlotSelect({
         <Command className="rounded-lg border shadow-md md:min-w-[16rem]">
           <CommandInput placeholder="Type a time_slot or search..." />
           <CommandList>
-            <CommandItem
-              onSelect={() => {
-                on_select(null);
-                set_is_open(false);
-              }}
-            >
-              <span className="opacity-0">NULL</span>
-            </CommandItem>
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandItem
               onSelect={() => {

@@ -58,25 +58,30 @@ import { sql_delete, sql_insert, sql_query } from "@/utils";
 import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 
-type SpecialEnrollmentSelectProps = {
+type InstructorSelectProps = {
   current_select: string | null;
   is_open: boolean;
   set_is_open: (is_open: boolean) => void;
-  on_select: (special_enrollment_title: string | null) => void;
+  on_select: (instructor_name: string | null) => void;
 };
 
-export function SpecialEnrollmentSelect({ current_select, is_open, set_is_open, on_select }: SpecialEnrollmentSelectProps) {
+export function InstructorSelect({
+  current_select,
+  is_open,
+  set_is_open,
+  on_select
+}: InstructorSelectProps) {
   const {
-    special_enrollments,
+    instructors,
     update,
-    set_update,
+    set_update
   } = use_filter_context();
 
   const formSchema = z.object({
-    special_enrollment: z
+    instructor: z
     .string()
     .refine(
-      (value) => !special_enrollments.some(v => v.special_enrollment === value),
+      (value) => !instructors.some(v => v.instructor_name === value),
       {message: "value already existed"}
     )
   });
@@ -84,12 +89,12 @@ export function SpecialEnrollmentSelect({ current_select, is_open, set_is_open, 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      special_enrollment: "",
+      instructor: "",
     }
   })
 
   function on_add_submit(values: z.infer<typeof formSchema>) {
-    const sql = `INSERT INTO special_enrollment (special_enrollment) VALUES ('${values.special_enrollment}');`;
+    const sql = `INSERT INTO instructor (instructor_name) VALUES ('${values.instructor}');`;
     sql_insert(sql);
     set_update(!update);
   }
@@ -98,6 +103,7 @@ export function SpecialEnrollmentSelect({ current_select, is_open, set_is_open, 
     <Popover
       open={is_open}
       onOpenChange={(is_open) => {set_is_open(is_open)}}
+      modal={true}
     >
       <div className="flex">
         <PopoverTrigger asChild>
@@ -126,19 +132,19 @@ export function SpecialEnrollmentSelect({ current_select, is_open, set_is_open, 
           </DialogTrigger>
           <DialogContent className="sm:max-w-[325px]">
             <DialogHeader>
-              <DialogTitle>Add new special enrollment:</DialogTitle>
+              <DialogTitle>Add new instructor:</DialogTitle>
               <DialogDescription>
-                Add new special enrollment here. Click submit when you're done.
+                Add new instructor here. Click submit when you're done.
               </DialogDescription>
             </DialogHeader>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(on_add_submit)} className="flex flex-col gap-4">
                 <FormField
                   control={form.control}
-                  name="special_enrollment"
+                  name="instructor"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Special Enrollment:</FormLabel>
+                      <FormLabel>Instructor:</FormLabel>
                       <FormControl>
                         <Input
                           className="w-32"
@@ -161,10 +167,9 @@ export function SpecialEnrollmentSelect({ current_select, is_open, set_is_open, 
           padding: "0"
         }}
       >
-        <Command className="rounded-lg border shadow-md md:min-w-[16rem]">
-          <CommandInput placeholder="Type a special_enrollment or search..." />
+        <Command className="rounded-lg border shadow-md md:min-w-[12rem]">
+          <CommandInput placeholder="Type a instructor or search..." />
           <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
             <CommandItem
               onSelect={() => {
                 on_select(null);
@@ -173,21 +178,23 @@ export function SpecialEnrollmentSelect({ current_select, is_open, set_is_open, 
             >
               <span className="opacity-0">NULL</span>
             </CommandItem>
-            {special_enrollments.map((special_enrollment) => (
+            <CommandEmpty>No results found.</CommandEmpty>
+            {instructors.map((instructor) => (
               <CommandItem
-                key={special_enrollment.special_enrollment}
+                key={instructor.instructor_name}
                 onSelect={() => {
-                  on_select(special_enrollment.special_enrollment);
+                  on_select(instructor.instructor_name);
                   set_is_open(false);
                 }}
               >
-                <span>{special_enrollment.special_enrollment}</span>
+                <span>{instructor.instructor_name}</span>
+                <div className="ml-auto"/>
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={(e) => {
                     e.stopPropagation()
-                    const sql = `DELETE FROM special_enrollment WHERE special_enrollment = '${special_enrollment.special_enrollment}';`;
+                    const sql = `DELETE FROM instructor WHERE instructor_name = '${instructor.instructor_name}';`;
                     sql_delete(sql);
                     set_update(!update);
                   }}
