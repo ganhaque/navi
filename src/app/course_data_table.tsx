@@ -58,10 +58,10 @@ export function CourseDataTable() {
     update,
     set_update,
   } = use_filter_context();
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  )
+  const [sorting, setSorting] = React.useState<SortingState>([
+    {id: "course_number", desc: false}
+  ])
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] =
   React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
@@ -195,6 +195,10 @@ export function CourseDataTable() {
     {
       accessorKey: "course_number",
       header: "Number-Section",
+      enableSorting: true,
+      sortingFn: (a: any, b: any) => {
+        return a.original.course_number - b.original.course_number;
+      },
       cell: ({ row }) => (
         <div>
           {row.original.department_abbreviation} {row.original.course_number}-{row.original.section}
