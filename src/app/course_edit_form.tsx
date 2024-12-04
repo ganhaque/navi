@@ -208,8 +208,14 @@ export function CourseEditForm({current_course} : CourseEditFormProps) {
 
     /* console.log(sql_update); */
     /* sql_query(sql_update); */
-    sql_update(sql_statement);
-    set_update(!update);
+    sql_update(sql_statement)
+      .then(() => {
+        set_update(!update);
+      })
+      .catch((error) => {
+        console.error("Error editing course:", error);
+        alert("Failed to edit course. Check the console for details.");
+      });
   }
 
   return (
