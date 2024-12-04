@@ -49,6 +49,7 @@ import {
 import { Course, use_filter_context } from "@/app/data_provider";
 import { format_course_time, sql_delete } from "@/utils"
 import { CourseEditForm } from "./course_edit_form"
+import { CourseAddForm } from "./course_add_form"
 
 
 export function CourseDataTable() {
@@ -106,9 +107,9 @@ export function CourseDataTable() {
             </DropdownMenu>
             <SheetContent>
               <SheetHeader>
-                <SheetTitle>Edit profile</SheetTitle>
+                <SheetTitle>Edit course</SheetTitle>
                 <SheetDescription>
-                  Make changes to your profile here. Click save when you're done.
+                  Make changes to the course here. Click save when you're done.
                 </SheetDescription>
                 <CourseEditForm
                   current_course={row.original}
@@ -370,10 +371,10 @@ export function CourseDataTable() {
               <SheetDescription>
                 Add new course here. Click submit when you're done.
               </SheetDescription>
-              {/* TODO:  */}
-              {/* <CourseEditForm */}
-              {/*   current_course={row.original} */}
-              {/* /> */}
+              <SheetDescription>
+                NOTE: * indicates required fields
+              </SheetDescription>
+              <CourseAddForm/>
             </SheetHeader>
             <SheetFooter>
             </SheetFooter>
