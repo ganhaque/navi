@@ -1,10 +1,10 @@
-# Github Links
+# Project Links
 - Application user interface
   - https://github.com/ganhaque/navi
 - Data scraper/generator
   - https://github.com/ganhaque/booklet_data_generator
 
-The database file is in the data folder (`./data/booklet.db`).
+The database file is in the folder (`navi/data/booklet.db`).
 
 # Instruction
 
@@ -13,7 +13,7 @@ Make sure `Node` is installed and `npm` is available in the command line.
 
 ```bash
 # git clone the navi repo & cd into it
-git clone https://github.com/ganhaque/navi.git && cd navi
+git clone --recurse-submodules https://github.com/ganhaque/navi.git && cd navi
 
 # install dependencies
 npm install
