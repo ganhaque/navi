@@ -3,13 +3,19 @@
 import { sql_query } from '@/utils';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 interface ProviderContextType {
-  current_schedule: number,
-  set_current_schedule: React.Dispatch<React.SetStateAction<number>>;
+  /* current_schedule: number, */
+  /* set_current_schedule: React.Dispatch<React.SetStateAction<number>>; */
   courses: Course[],
   semester_filter: string,
   set_semester_filter: React.Dispatch<React.SetStateAction<string>>;
   department_filter: string,
   set_department_filter: React.Dispatch<React.SetStateAction<string>>;
+  course_type_filter: string | null,
+  set_course_type_filter: React.Dispatch<React.SetStateAction<string | null>>;
+  special_enrollment_filter: string | null,
+  set_special_enrollment_filter: React.Dispatch<React.SetStateAction<string | null>>;
+  day_pattern_filter: string | null,
+  set_day_pattern_filter: React.Dispatch<React.SetStateAction<string | null>>;
 
   semesters: Semester[],
   departments: Department[],
@@ -95,7 +101,7 @@ export interface Instructor {
 const FilterContext = React.createContext<ProviderContextType | null>(null);
 
 export const FilterProvider: React.FC<{children: ReactNode}> = ({ children }) => {
-  const [current_schedule, set_current_schedule] = useState(-1);
+  /* const [current_schedule, set_current_schedule] = useState(-1); */
 
 
   const [courses, set_courses] = useState<Course[]>([]);
@@ -112,6 +118,9 @@ export const FilterProvider: React.FC<{children: ReactNode}> = ({ children }) =>
 
   const [semester_filter, set_semester_filter] = useState("Spring 2025");
   const [department_filter, set_department_filter] = useState("Computer Science");
+  const [course_type_filter, set_course_type_filter] = useState<string | null>(null);
+  const [special_enrollment_filter, set_special_enrollment_filter] = useState<string | null>(null);
+  const [day_pattern_filter, set_day_pattern_filter] = useState<string | null>(null);
 
   // hacky solution to prompt courses update
   // do set_update(!update) to update courses
@@ -279,24 +288,49 @@ WHERE 1=1
         query += " AND department_title = '" + department_filter + "'";
         params.push(department_filter);
       }
+      if (course_type_filter) {
+        query += " AND course_type = '" + course_type_filter + "'";
+        params.push(course_type_filter);
+      }
+      if (special_enrollment_filter) {
+        query += " AND special_enrollment = '" + special_enrollment_filter + "'";
+        params.push(special_enrollment_filter);
+      }
+      if (day_pattern_filter) {
+        query += " AND day_pattern = '" + day_pattern_filter + "'";
+        params.push(day_pattern_filter);
+      }
       const courses = await sql_query(query);
       /* console.log(courses); */
       set_courses(courses);
     }
 
     get_courses();
-  }, [update, semester_filter, department_filter]);
+  }, [
+      update,
+      semester_filter,
+      department_filter,
+      course_type_filter,
+      special_enrollment_filter,
+      day_pattern_filter,
+    ]);
 
   return (
     <FilterContext.Provider
       value={{
-        current_schedule,
-        set_current_schedule,
+        /* current_schedule, */
+        /* set_current_schedule, */
         courses,
         semester_filter,
         set_semester_filter,
         department_filter,
         set_department_filter,
+        course_type_filter,
+        set_course_type_filter,
+        special_enrollment_filter,
+        set_special_enrollment_filter,
+        day_pattern_filter,
+        set_day_pattern_filter,
 
         semesters,
         departments,
