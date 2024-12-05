@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Github Links
+- Application user interface
+  - https://github.com/ganhaque/navi
+- Data scraper/generator
+  - https://github.com/ganhaque/booklet_data_generator
 
-## Getting Started
+The database file is in the data folder (`./data/booklet.db`).
 
-First, run the development server:
+# Instruction
+
+## Application
+Make sure `Node` is installed and `npm` is available in the command line.
 
 ```bash
+# git clone the navi repo & cd into it
+git clone https://github.com/ganhaque/navi.git && cd navi
+
+# install dependencies
+npm install
+
+# run it
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# go to `localhost:3000` in your browser by manually entering it or by clicking the link given
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Data scraper
+Make sure `node` and `rust` is installed. `npm` and `cargo` should be available in the command line.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# cd into the directory
+cd data/booklet_data_generator
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# scrape the data and wait for the output json file
+npm scrape.js
 
-## Learn More
+# execute the rust parser to generate a .db file in the parent directory 
+# NOTE: this will replace the .db file, not update it
+cargo run
+```
 
-To learn more about Next.js, take a look at the following resources:
+# Test Queries
+There is a `test_queries.sql` in the `data` folder, which can be executed by
+```bash
+sqlite3 --column --header booklet.db < test_queries.sql
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
