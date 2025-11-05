@@ -4,12 +4,8 @@ import "@/globals.css";
 import "@/styles.css";
 import "@/responsive.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/app/app_sidebar/mod";
 /* import { ThemeProvider } from "@/components/ui/theme-provider"; */
 /* import db from "@/server/db"; */
-
-import SiteHeader from "./site-header";
-import { FilterProvider } from "@/app/data_provider";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -36,7 +32,7 @@ export default function RootLayout({
           overflow: "visible",
           margin: "0",
           minHeight: "100vh",
-          backgroundColor: "hsla(var(--black))",
+          backgroundColor: "black",
           color: "hsla(var(--white))",
         }}
         className={inter.className}
@@ -47,26 +43,15 @@ export default function RootLayout({
           minHeight: "100vh",
           position: "relative",
         }}>
-          <FilterProvider>
-            <SidebarProvider>
-              <AppSidebar />
-              <main style={{
-                display: "flex",
-                flexDirection: "column",
-                flexGrow: "1",
-                flexShrink: "1",
-                flexBasis: "0%",
-              }}>
-                <SiteHeader />
-                <div style={{
-                  display: "flex",
-                  flexGrow: "1",
-                }}>
-                  {children}
-                </div>
-              </main>
-            </SidebarProvider>
-          </FilterProvider>
+          <main style={{
+            display: "flex",
+            flexDirection: "column",
+            flexGrow: "1",
+            flexShrink: "1",
+            flexBasis: "0%",
+          }}>
+            {children}
+          </main>
         </div>
       </body>
       {/* </ThemeProvider> */}

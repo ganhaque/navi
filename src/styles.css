@@ -82,6 +82,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+
+  --tile_size: 96px;
+  --sprite_size: 78px;
 }
 
 ::-webkit-scrollbar {
@@ -94,6 +97,7 @@
   /* border: 0 solid color-mix(in hsl, hsla(var(--white)), var(--pure-black) 70%) */
   /* border: 0 solid color-mix(in hsl, hsla(var(--black)), var(--pure-white) 20%) */
   border: 0 solid var(--grey);
+  outline: 0 solid var(--grey);
 }
 
 html {
